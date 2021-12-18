@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace SCUR_bot
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static Task Main(string[] args)
+            => new Program().MainAsync();
+
+        public async Task MainAsync()
         {
-            Console.WriteLine("Hello World!");
+            throw new NotImplementedException();
         }
     }
 }
