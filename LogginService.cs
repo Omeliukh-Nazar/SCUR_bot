@@ -31,5 +31,5 @@ namespace SCUR_bot
             return Task.CompletedTask;
         }
     }
-    }
+
 }
