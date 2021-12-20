@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,27 @@ namespace SCUR_bot
 {
 	public class InfoModule : ModuleBase<SocketCommandContext>
 	{
+
+		[Command("help")]
+		[Alias("help","h")]
+		[Summary("List of commands")]
+		public async Task HelpAsync()
+		{
+			List<CommandInfo> commands = Program._commands.Commands.ToList();
+			EmbedBuilder embedBuilder = new EmbedBuilder();
+            for (int i = 0; i < commands.Count/2; i++)
+            {
+				// Get the command Summary attribute information
+				string embedFieldText = commands[i].Summary ?? "No description available\n";
+				string aliasses = string.Join(", ", commands[i].Aliases.ToList());
+				embedBuilder.AddField($"{commands[i].Name} [{aliasses}]", embedFieldText);
+			}
+			await ReplyAsync("Here's a list of commands and their description: ", false, embedBuilder.Build());
+		}
+
+
 		[Command("say")]
+		[Alias("say", "s")]
 		[Summary("Echoes a message.")]
 		public async Task SayAsync(
 			[Remainder][Summary("The text to echo")]
@@ -30,6 +51,7 @@ namespace SCUR_bot
 
 		// square 20 -> 400
 		[Command("square")]
+		[Alias("square", "sq")]
 		[Summary("Squares a number.")]
 		public async Task SquareAsync(
 			[Summary("The number to square.")]
@@ -41,6 +63,7 @@ namespace SCUR_bot
 
 		// GetPhotoOfe smth -> photo of smth
 		[Command("GetPhotoOf")]
+		[Alias("GetPhotoOf", "gpof")]
 		[Summary("Get random photo")]
 		public async Task GetPhotoOf(
 			[Summary("The photo of ...")]
@@ -49,7 +72,6 @@ namespace SCUR_bot
 			var image = GetRandomPhoto.GetRandomPhotoOf(name);
 			await Context.Channel.SendMessageAsync(image);
 		}
-
 
 		private Dictionary<string, string> keyValuePairsSay = new Dictionary<string, string>
 		{
@@ -65,6 +87,7 @@ namespace SCUR_bot
 			{"гармащур","щур" + Environment.NewLine},
 			{"слава","Героям слава!" + Environment.NewLine}
 		};
+
 
 	}
 }

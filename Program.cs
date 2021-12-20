@@ -12,7 +12,7 @@ namespace SCUR_bot
     public class Program
     {
         private DiscordSocketClient _client;
-        private CommandService _commands;
+        public static CommandService _commands;
         private LogginService _logginService;
         private IServiceProvider _services;
         private CommandHandler _commandHandler;
