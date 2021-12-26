@@ -11,9 +11,12 @@ namespace SCUR_bot
 {
     public class Program
     {
+        public const string SpeechDirectoryWav = "E:\\file.wav";
+
         private DiscordSocketClient _client;
         public static CommandService _commands;
         private LogginService _logginService;
+        private AudioService _audioService;
         private IServiceProvider _services;
         private CommandHandler _commandHandler;
         public static Task Main(string[] args)
@@ -28,16 +31,17 @@ namespace SCUR_bot
 
             _commands = new CommandService(new CommandServiceConfig
             {
-                LogLevel = LogSeverity.Info,
                 CaseSensitiveCommands = false,
                 IgnoreExtraArgs = true
             });
 
             _logginService = new LogginService(_client, _commands);
+            _audioService = new AudioService();
 
             _services = new ServiceCollection()
                .AddSingleton(_client)
                .AddSingleton(_commands)
+               .AddSingleton(_audioService)
                .AddSingleton(_logginService)
                .BuildServiceProvider();
 
@@ -55,7 +59,6 @@ namespace SCUR_bot
 
             await _client.StartAsync();
 
-            // Block this task until the program is closed.
             await Task.Delay(-1);
         }
 
