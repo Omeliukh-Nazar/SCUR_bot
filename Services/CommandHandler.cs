@@ -24,11 +24,13 @@ namespace SCUR_bot
 
         public async Task InstallCommandsAsync()
         {
-            _client.MessageReceived += HandleCommandAsync;
-
             await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(),
                                             services: _services);
+
+            _client.MessageReceived += HandleCommandAsync;
         }
+
+       
 
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {

@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -73,7 +74,56 @@ namespace SCUR_bot
 			var image = GetRandomPhoto.GetRandomPhotoOf(name);
 			await Context.Channel.SendMessageAsync(image);
 		}
-	
+
+		// GetPhotoOfe smth -> photo of smth
+		[Command("VoteBan")]
+		[Alias("VoteBan", "VB")]
+		[Summary("Voting for ban ...(sorry for this)")]
+		public async Task VoteBan(SocketGuildUser user)
+		{
+            if (user.Status != UserStatus.Offline)
+            {
+				await Context.Channel.SendMessageAsync("User is offline it is impossible");
+				return;
+			}
+			var user_role = Context.User as SocketGuildUser;
+			var role = (user as IGuildUser).Guild.Roles.FirstOrDefault(x => x.Name == "🏆🎓🥇БОС КАЧАЛКІ🥇🎓🏆");
+			if (user.Roles.Contains(role))
+			{
+				await Context.Channel.SendMessageAsync("Do you want ban?");
+				return;
+			}
+			int voteNeed = 0;
+			foreach (var item in Context.Guild.VoiceChannels)
+            {
+				voteNeed += item.Users.Count;
+            }
+			var message = await Context.Channel.SendMessageAsync(
+				$"Voting for ban {user.Username}#{user.Id} started!{Environment.NewLine}" +
+				$"You have 15s to try do it! {Environment.NewLine}Needed {voteNeed} vote");
+			voteNeed--;
+			await message.AddReactionAsync(new Emoji("✅"));
+			await Task.Delay(15000);
+			await Ban(message, user, voteNeed);
+		}
+
+        public async Task Ban(RestUserMessage message, SocketGuildUser user, int count)
+		{
+			var emoji_check = new Emoji("✅");
+			var reactions = await message.GetReactionUsersAsync(emoji_check, count).CountAsync();
+			if (reactions >= count)
+            {
+				await Context.Channel.SendMessageAsync($"{user.Username} have a good mute! hihihihi");
+				await user.ModifyAsync(x =>
+				{
+					x.Mute = true;
+				});
+			}
+            else
+            {
+				await Context.Channel.SendMessageAsync($"Try again((");
+			}
+		}
 
 		private Dictionary<string, string> keyValuePairsSay = new Dictionary<string, string>
 		{
@@ -89,7 +139,5 @@ namespace SCUR_bot
 			{"гармащур","щур" + Environment.NewLine},
 			{"слава","Героям слава!" + Environment.NewLine}
 		};
-
-
 	}
 }
