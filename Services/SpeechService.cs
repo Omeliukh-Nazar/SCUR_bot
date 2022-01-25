@@ -16,7 +16,8 @@ namespace SCUR_bot
     {
         internal static async Task TextToWav(string msg)
         {
-            var config = SpeechConfig.FromSubscription("e4fd4a522f3a48978f6027d4c810ec60", "westeurope");
+            string key = File.ReadAllText("Subscription.txt");
+            var config = SpeechConfig.FromSubscription(key, "westeurope");
             config.SpeechSynthesisLanguage = "uk-UA";
             config.SpeechSynthesisVoiceName = "uk-UA-PolinaNeural";
 
