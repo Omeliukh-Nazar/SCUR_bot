@@ -1,12 +1,35 @@
-﻿using System;
+﻿using Discord;
+using Discord.WebSocket;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace SCUR_bot
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private DiscordSocketClient _client;
+        public static Task Main(string[] args)
+            => new Program().MainAsync();
+
+        public async Task MainAsync()
         {
-            Console.WriteLine("Hello World!");
+            _client = new DiscordSocketClient();
+            _client.Log += Log;
+            var token = File.ReadAllText("token.txt");
+
+            await _client.LoginAsync(TokenType.Bot, token);
+
+            await _client.StartAsync();
+
+            // Block this task until the program is closed.
+            await Task.Delay(-1);
+        }
+
+        private Task Log(LogMessage msg)
+        {
+            Console.WriteLine(msg.ToString());
+            return Task.CompletedTask;
         }
     }
 }
