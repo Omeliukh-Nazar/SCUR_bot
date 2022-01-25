@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,6 +73,7 @@ namespace SCUR_bot
 			var image = GetRandomPhoto.GetRandomPhotoOf(name);
 			await Context.Channel.SendMessageAsync(image);
 		}
+	
 
 		private Dictionary<string, string> keyValuePairsSay = new Dictionary<string, string>
 		{
